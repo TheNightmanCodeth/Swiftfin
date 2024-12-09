@@ -162,7 +162,7 @@ class RefreshMetadataViewModel: ViewModel, Stateful, Eventful {
         }
 
         // After waiting for 5 seconds, fetch the updated item
-        let request = Paths.getItem(userID: userSession.user.id, itemID: itemId)
+        let request = Paths.getItem(itemID: itemId, userID: userSession.user.id)
         let response = try await userSession.client.send(request)
 
         await MainActor.run {

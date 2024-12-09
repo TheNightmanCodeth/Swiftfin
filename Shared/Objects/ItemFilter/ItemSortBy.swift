@@ -11,27 +11,15 @@ import JellyfinAPI
 
 // TODO: Remove when JellyfinAPI generates 10.9.0 schema
 
-enum ItemSortBy: String, CaseIterable, Displayable, Codable {
-
-    case premiereDate = "PremiereDate"
-    case name = "SortName"
-    case dateAdded = "DateCreated"
-    case random = "Random"
-
-    // TODO: Localize
-    var displayTitle: String {
-        switch self {
-        case .premiereDate:
-            return "Premiere date"
-        case .name:
-            return "Name"
-        case .dateAdded:
-            return "Date added"
-        case .random:
-            return "Random"
-        }
-    }
-}
+//enum ItemSortBy: String, CaseIterable, Displayable, Codable {
+//
+//    case premiereDate = "PremiereDate"
+//    case name = "SortName"
+//    case dateAdded = "DateCreated"
+//    case random = "Random"
+//
+//
+//}
 
 extension ItemSortBy: ItemFilter {
 
@@ -41,5 +29,20 @@ extension ItemSortBy: ItemFilter {
 
     init(from anyFilter: AnyItemFilter) {
         self.init(rawValue: anyFilter.value)!
+    }
+    
+    // TODO: Localize
+    var displayTitle: String {
+        switch self {
+        case .premiereDate:
+            return "Premiere date"
+        case .name:
+            return "Name"
+        case .dateCreated:
+            return "Date added"
+        case .random:
+            return "Random"
+        default: return "nan"
+        }
     }
 }

@@ -64,6 +64,8 @@ extension TranscodeReason: Displayable, SystemImageable {
             return L10n.directPlayError
         case .videoRangeTypeNotSupported:
             return L10n.videoRangeTypeNotSupported
+        case .videoCodecTagNotSupported:
+            return "Video codec tag not supported"
         }
     }
 

@@ -64,9 +64,10 @@ final class SettingsViewModel: ViewModel {
 
     func deleteCurrentUserProfileImage() {
         Task {
-            let request = Paths.deleteUserImage(
+            let request = Paths.deleteUserImageByIndex(
                 userID: userSession.user.id,
-                imageType: "Primary"
+                imageType: "Primary",
+                index: 0
             )
             let _ = try await userSession.client.send(request)
 

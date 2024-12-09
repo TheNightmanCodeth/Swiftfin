@@ -156,9 +156,7 @@ extension UserState {
             maxWidth: scaleWidth
         )
         let request = Paths.getUserImage(
-            userID: id,
-            imageType: "Primary",
-            parameters: parameters
+            parameters: .init(userID: id, tag: data.primaryImageTag, maxWidth: scaleWidth)
         )
 
         let profileImageURL = client.fullURL(with: request)
