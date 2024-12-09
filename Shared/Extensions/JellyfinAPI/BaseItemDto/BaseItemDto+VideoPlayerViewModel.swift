@@ -35,21 +35,29 @@ extension BaseItemDto {
             maxStreamingBitrate: maxBitrate
         )
 
-        let request = Paths.getPostedPlaybackInfo(
+        let playbackInfoRequest = Paths.getPostedPlaybackInfo(
             itemID: self.id!,
             parameters: playbackInfoParameters,
             playbackInfo
         )
 
-        let response = try await userSession.client.send(request)
+        let segmentsRequest = Paths.getItemSegments(itemID: self.id!)
+        
+        async let playbackInfoResponse = try await userSession.client.send(playbackInfoRequest)
+        async let segmentsResponse = try await userSession.client.send(segmentsRequest)
 
-        guard let matchingMediaSource = response.value.mediaSources?
+        guard let matchingMediaSource = try await playbackInfoResponse.value.mediaSources?
             .first(where: { $0.eTag == mediaSource.eTag && $0.id == mediaSource.id })
         else {
             throw JellyfinAPIError("Matching media source not in playback info")
         }
-
-        return try matchingMediaSource.videoPlayerViewModel(with: self, playSessionID: response.value.playSessionID!)
+        
+        return try await matchingMediaSource
+            .videoPlayerViewModel(
+                with: self,
+                playSessionID: playbackInfoResponse.value.playSessionID!,
+                segments: segmentsResponse.value.items ?? []
+            )
     }
 
     func liveVideoPlayerViewModel(with mediaSource: MediaSourceInfo, logger: Logger) async throws -> VideoPlayerViewModel {

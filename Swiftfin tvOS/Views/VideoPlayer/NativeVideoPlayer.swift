@@ -101,6 +101,28 @@ class UINativeVideoPlayerViewController: AVPlayerViewController {
                 self.videoPlayerManager.currentProgressHandler.scrubbedProgress = progress
                 self.videoPlayerManager.currentProgressHandler.seconds = newSeconds
                 self.videoPlayerManager.currentProgressHandler.scrubbedSeconds = newSeconds
+                
+                if let introSegment = self.videoPlayerManager.currentViewModel.introSegment {
+                    let show = introSegment.contains(newSeconds)
+                    let newTime = CMTime(
+                        value: CMTimeValue(introSegment.upperBound * 100),
+                        timescale: time.timescale
+                    )
+                    self.skipToTime = show ? newTime : nil
+                    self.contextualActions = show ? [skipAction] : []
+                    return
+                }
+                
+                if let outroSegment = self.videoPlayerManager.currentViewModel.outroSegment {
+                    let show = outroSegment.contains(newSeconds)
+                    let newTime = CMTime(
+                        value: CMTimeValue(outroSegment.upperBound * 100),
+                        timescale: time.timescale
+                    )
+                    self.skipToTime = show ? newTime : nil
+                    self.contextualActions = show ? [skipAction] : []
+                    return
+                }
             }
         }
 
@@ -172,5 +194,13 @@ class UINativeVideoPlayerViewController: AVPlayerViewController {
         player?.pause()
 
         videoPlayerManager.sendStopReport()
+    }
+    
+    private var skipToTime: CMTime? = nil
+    
+    private lazy var skipAction = UIAction(title: "Skip") { [weak self] _ in
+        guard let self = self, let skipToTime = self.skipToTime else { return }
+        print("[POOP] TimeSkipTo: \(skipToTime) / \(skipToTime.seconds)")
+        self.player?.seek(to: skipToTime)
     }
 }
