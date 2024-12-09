@@ -45,7 +45,7 @@ extension TranscodingProfile {
             isEstimateContentLength: isEstimateContentLength,
             maxAudioChannels: maxAudioChannels,
             minSegments: minSegments,
-            protocol: `protocol`,
+            protocol: MediaStreamProtocol(rawValue: `protocol`!.lowercased()),
             segmentLength: segmentLength,
             transcodeSeekInfo: transcodeSeekInfo,
             type: type,
