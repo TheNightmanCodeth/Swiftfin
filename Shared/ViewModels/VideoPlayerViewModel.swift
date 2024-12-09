@@ -27,6 +27,7 @@ class VideoPlayerViewModel: ViewModel {
     let selectedSubtitleStreamIndex: Int
     let chapters: [ChapterInfo.FullInfo]
     let streamType: StreamType
+    let mediaSegments: [MediaSegmentDto]
 
     var hlsPlaybackURL: URL {
 
@@ -84,6 +85,22 @@ class VideoPlayerViewModel: ViewModel {
 
         return configuration
     }
+    
+    var introSegment: ClosedRange<Int>? {
+        let segment = self.mediaSegments.first(where: { $0.type == .intro })
+        guard let start = segment?.startTicks, let end = segment?.endTicks else {
+            return nil
+        }
+        return start...(end)
+    }
+    
+    var outroSegment: ClosedRange<Int>? {
+        let segment = self.mediaSegments.first(where: { $0.type == .outro })
+        guard let start = segment?.startTicks, let end = segment?.endTicks else {
+            return nil
+        }
+        return start...(end)
+    }
 
     init(
         playbackURL: URL,
@@ -96,7 +113,8 @@ class VideoPlayerViewModel: ViewModel {
         selectedAudioStreamIndex: Int,
         selectedSubtitleStreamIndex: Int,
         chapters: [ChapterInfo.FullInfo],
-        streamType: StreamType
+        streamType: StreamType,
+        mediaSegments: [MediaSegmentDto] = []
     ) {
         self.item = item
         self.mediaSource = mediaSource
@@ -111,6 +129,7 @@ class VideoPlayerViewModel: ViewModel {
         self.selectedSubtitleStreamIndex = selectedSubtitleStreamIndex
         self.chapters = chapters
         self.streamType = streamType
+        self.mediaSegments = mediaSegments
         super.init()
     }
 

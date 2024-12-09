@@ -16,7 +16,7 @@ import UIKit
 
 extension MediaSourceInfo {
 
-    func videoPlayerViewModel(with item: BaseItemDto, playSessionID: String) throws -> VideoPlayerViewModel {
+    func videoPlayerViewModel(with item: BaseItemDto, playSessionID: String, segments: [MediaSegmentDto]) throws -> VideoPlayerViewModel {
 
         let userSession: UserSession! = Container.shared.currentUserSession()
         let playbackURL: URL
@@ -62,7 +62,8 @@ extension MediaSourceInfo {
             selectedAudioStreamIndex: defaultAudioStreamIndex ?? -1,
             selectedSubtitleStreamIndex: defaultSubtitleStreamIndex ?? -1,
             chapters: item.fullChapterInfo,
-            streamType: streamType
+            streamType: streamType,
+            mediaSegments: segments
         )
     }
 
